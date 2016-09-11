@@ -4,6 +4,9 @@ jdk: oraclejdk8
 script:
   - mvn test
 
+before_deploy:
+  - cd garbagehound
+
 deploy:
   provider: gae
   keyfile: GarbageHound-56e7fa2329f9.json
