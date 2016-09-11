@@ -8,6 +8,8 @@ deploy:
   provider: gae
   keyfile: GarbageHound-56e7fa2329f9.json
   project: garbagehound-142922
+  skip_cleanup: true
+  default: true
 
 before_install:
   - cd garbagehound
