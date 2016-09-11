@@ -1,9 +1,6 @@
 language: java
 jdk: oraclejdk8
 
-before_script:
-  - cd garbagehound
-
 script:
   - mvn test
 
