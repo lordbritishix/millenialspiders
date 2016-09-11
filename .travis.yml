@@ -1,9 +1,6 @@
 language: java
 jdk: oraclejdk8
 
-before_deploy:
-  - cd millenialspiders/garbagehound
-
 deploy:
   provider: gae
   keyfile: GarbageHound-56e7fa2329f9.json

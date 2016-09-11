@@ -14,3 +14,15 @@ garbagehound - backend service that helps identify how to recycle wastes
 
 ## Ideas
 https://docs.google.com/document/d/1QahJzcg8WAVzF6ERDDHxkWEhgXc0bgqOCjDJJT5Ji44/edit?usp=sharing
+
+# Instructions
+
+## Setup
+* `gcloud init`
+
+## Maven
+### Running locally
+    $ mvn clean jetty:run-exploded
+  
+### Deploying
+    $ mvn appengine:deploy
