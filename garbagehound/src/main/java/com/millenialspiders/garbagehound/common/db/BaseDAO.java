@@ -1,4 +1,4 @@
-package com.millenialspiders.garbagehound.servlet.com.millenialspiders.garbagehound.db;
+package com.millenialspiders.garbagehound.common.db;
 
 /**
  * All DAO must extend this class

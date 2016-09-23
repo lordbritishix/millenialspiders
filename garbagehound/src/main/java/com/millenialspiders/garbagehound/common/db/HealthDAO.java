@@ -1,10 +1,10 @@
-package com.millenialspiders.garbagehound.servlet.com.millenialspiders.garbagehound.db;
+package com.millenialspiders.garbagehound.common.db;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import com.google.inject.Inject;
-import com.millenialspiders.garbagehound.servlet.com.millenialspiders.garbagehound.config.AppConfig;
+import com.millenialspiders.garbagehound.common.config.AppConfig;
 
 /**
  * DAO to check DB health

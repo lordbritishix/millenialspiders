@@ -1,4 +1,4 @@
-package com.millenialspiders.garbagehound.servlet.com.millenialspiders.garbagehound.config;
+package com.millenialspiders.garbagehound.common.config;
 
 import com.google.common.base.Preconditions;
 
@@ -6,13 +6,13 @@ import com.google.common.base.Preconditions;
  * Application configuration
  */
 public class AppConfig {
+    //hostname, user, password
+    private static final String CONNECTION_STRING = "jdbc:mysql://%s&user=%s&password=%s";
+
     private final String dbUsername;
     private final String dbPassword;
     private final String dbHostname;
     private final String dbConnectionString;
-
-    //hostname, user, password
-    private static final String CONNECTION_STRING = "jdbc:mysql://%s&user=%s&password=%s";
 
     public AppConfig(AppConfigBuilder builder) {
         this.dbHostname = builder.dbHostname;
@@ -46,25 +46,25 @@ public class AppConfig {
             return new AppConfigBuilder();
         }
 
-        public AppConfigBuilder withDbUserName(String dbUsername) {
-            this.dbUsername = dbUsername;
+        public AppConfigBuilder withDbUserName(String username) {
+            this.dbUsername = username;
             return this;
         }
 
-        public AppConfigBuilder withDbPassword(String dbPassword) {
-            this.dbPassword = dbPassword;
+        public AppConfigBuilder withDbPassword(String password) {
+            this.dbPassword = password;
             return this;
         }
 
-        public AppConfigBuilder withHostname(String dbHostname) {
-            this.dbHostname = dbHostname;
+        public AppConfigBuilder withHostname(String hostname) {
+            this.dbHostname = hostname;
             return this;
         }
 
         public AppConfig build() {
-            Preconditions.checkNotNull("dbHostname cannot be null", dbHostname);
-            Preconditions.checkNotNull("dbPassword cannot be null", dbPassword);
-            Preconditions.checkNotNull("dbUsername cannot be null", dbUsername);
+            Preconditions.checkNotNull(dbUsername, "dbUsername cannot be null");
+            Preconditions.checkNotNull(dbPassword, "dbPassword cannot be null");
+            Preconditions.checkNotNull(dbHostname, "dbHostname cannot be null");
 
             return new AppConfig(this);
         }

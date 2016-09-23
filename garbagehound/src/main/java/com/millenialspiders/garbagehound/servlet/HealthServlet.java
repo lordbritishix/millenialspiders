@@ -11,8 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.JsonObject;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.millenialspiders.garbagehound.servlet.com.millenialspiders.garbagehound.db.HealthDAO;
-import com.millenialspiders.garbagehound.servlet.com.millenialspiders.garbagehound.guice.GarbageHoundModule;
+import com.millenialspiders.garbagehound.common.db.HealthDAO;
+import com.millenialspiders.garbagehound.common.guice.GarbageHoundModule;
 
 @WebServlet("/health")
 public class HealthServlet extends HttpServlet {

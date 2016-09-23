@@ -1,4 +1,4 @@
-package com.millenialspiders.garbagehound.servlet.com.millenialspiders.garbagehound.db;
+package com.millenialspiders.garbagehound.common.db;
 
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.logging.Logger;
 import javax.sql.DataSource;
-import com.millenialspiders.garbagehound.servlet.com.millenialspiders.garbagehound.config.AppConfig;
+import com.millenialspiders.garbagehound.common.config.AppConfig;
 
 /**
  * Rudimentary data source ofr GarbageHound. Users must close the connection returned by this DataSource
@@ -29,6 +29,7 @@ public class GarbageHoundDataSource implements DataSource {
         throw new UnsupportedOperationException();
     }
 
+    //CHECKSTYLE:OFF
     @Override
     public <T> T unwrap(Class<T> iface) throws SQLException {
         throw new UnsupportedOperationException();
@@ -38,6 +39,7 @@ public class GarbageHoundDataSource implements DataSource {
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
         throw new UnsupportedOperationException();
     }
+    //CHECKSTYLE:ON
 
     @Override
     public PrintWriter getLogWriter() throws SQLException {
