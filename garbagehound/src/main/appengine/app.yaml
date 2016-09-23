@@ -1,10 +1,15 @@
 runtime: java
 vm: true
+threadsafe: true
 
 handlers:
 - url: /.*
   script: this field is required, but ignored
   secure: always
+
+# [START env_variables]
+env_variables:
+  SQL_URL: jdbc:mysql://google/garbagehound?cloudSqlInstance=garbagehound-142922:us-central1:garbagehound&socketFactory=com.google.cloud.sql.mysql.SocketFactory&user=garbagehound1&password=12345678
 
 resources:
   cpu: 1
