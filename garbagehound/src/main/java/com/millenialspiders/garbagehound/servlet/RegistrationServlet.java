@@ -50,7 +50,5 @@ public class RegistrationServlet extends HttpServlet {
         } catch (SQLException e) {
             throw new ServletException("Unable to insert new account to the db", e);
         }
-
-        ServletUtils.writeSuccess(resp);
     }
 }
