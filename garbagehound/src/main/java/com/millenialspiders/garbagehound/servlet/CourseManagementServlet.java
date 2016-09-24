@@ -11,38 +11,38 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.millenialspiders.garbagehound.common.db.AccountDAO;
+import com.millenialspiders.garbagehound.common.db.CourseDAO;
 import com.millenialspiders.garbagehound.common.guice.GarbageHoundModule;
 
-@WebServlet("/accountAvailability")
-public class AccountAvailabilityServlet extends HttpServlet {
+@WebServlet("/course")
+public class CourseManagementServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String username = req.getParameter("username");
-        String day = req.getParameter("day");
+        String courseId = req.getParameter("courseId");
+        String courseName = req.getParameter("courseName");
         
         Injector injector = Guice.createInjector(new GarbageHoundModule());
-        AccountDAO accDAO = injector.getInstance(AccountDAO.class);
+        CourseDAO courseDAO = injector.getInstance(CourseDAO.class);
+        
         try {
-            accDAO.addAccountDay(username, day);
+            courseDAO.createCourse(courseId, courseName);
             ServletUtils.writeSuccess(resp);
         } catch (SQLException e) {
-            throw new ServletException("Unable to insert day info to the db", e);
+            throw new ServletException("Unable to insert new course to the db", e);
         }
     }
-    
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String username = req.getParameter("username");
-        String day = req.getParameter("day");
+        String courseId = req.getParameter("courseId");
         
         Injector injector = Guice.createInjector(new GarbageHoundModule());
-        AccountDAO accDAO = injector.getInstance(AccountDAO.class);
+        CourseDAO courseDAO = injector.getInstance(CourseDAO.class);
+        
         try {
-            accDAO.deleteAccountDay(username, day);
+            courseDAO.deleteCourse(courseId);
             ServletUtils.writeSuccess(resp);
         } catch (SQLException e) {
-            throw new ServletException("Unable to delete day info to the db", e);
+            throw new ServletException("Unable to delete new course to the db", e);
         }
     }
 }
