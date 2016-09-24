@@ -20,6 +20,7 @@ public class StudentAccountDetails extends AccountDetails {
         setEmailAddress(builder.emailAddress);
         setFirstName(builder.firstName);
         setLastName(builder.lastName);
+        setPhoneNo(builder.phoneNo);
     }
 
     public Set<Course> getCourses() {
@@ -41,6 +42,7 @@ public class StudentAccountDetails extends AccountDetails {
         private String firstName;
         private String lastName;
         private String emailAddress;
+        private String phoneNo;
 
         public static StudentAccountDetailsBuilder newInstance() {
             return new StudentAccountDetailsBuilder();
@@ -58,6 +60,11 @@ public class StudentAccountDetails extends AccountDetails {
 
         public StudentAccountDetailsBuilder withEmail(String email) {
             this.emailAddress = email;
+            return this;
+        }
+
+        public StudentAccountDetailsBuilder withPhoneNo(String phoneNo) {
+            this.phoneNo = phoneNo;
             return this;
         }
 
