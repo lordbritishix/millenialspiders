@@ -25,7 +25,7 @@ public class AccountAvailabilityServlet extends HttpServlet {
         AccountDAO accDAO = injector.getInstance(AccountDAO.class);
         try {
             accDAO.addAccountDay(username, day);
-            ServletUtils.writeSuccess(resp);
+            ServletUtils.writeSuccess(resp, true);
         } catch (SQLException e) {
             throw new ServletException("Unable to insert instructor day info to the db", e);
         }
@@ -40,7 +40,7 @@ public class AccountAvailabilityServlet extends HttpServlet {
         AccountDAO accDAO = injector.getInstance(AccountDAO.class);
         try {
             accDAO.deleteAccountDay(username, day);
-            ServletUtils.writeSuccess(resp);
+            ServletUtils.writeSuccess(resp, true);
         } catch (SQLException e) {
             throw new ServletException("Unable to delete instructor day info to the db", e);
         }
