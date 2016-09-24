@@ -72,7 +72,6 @@ public class AccountDAO extends GarbageHoundDataSource {
             return 1;
         }
     }
-    
     public int addInstructorDay(String username, String day) throws SQLException {
         try (Connection conn = getConnection()) {
             int accountId = findAccountId(username);
@@ -120,6 +119,25 @@ public class AccountDAO extends GarbageHoundDataSource {
         
     }
     
+    public int createStudentDetails(String username, StudentAccountDetails student) throws SQLException {
+        try (Connection conn = getConnection()) {
+            int accountId = findAccountId(username);
+            
+            if (accountId == 0)
+                return 0;
+            PreparedStatement stmt = null;
+            String query = "INSERT INTO student_account_detail VALUES(DEFAULT, ?, ?, ?, ?, ?)";
+            stmt = conn.prepareStatement(query);
+            stmt.setInt(1, accountId);
+            stmt.setString(2, student.getFirstName());
+            stmt.setString(3, student.getLastName());
+            stmt.setString(4, student.getEmailAddress());
+            stmt.setString(5, student.getPhoneNo());
+            stmt.executeUpdate();
+            return 1;
+        }
+    }
+
     public int createStudentAccountForAccount(
             Account account, StudentAccountDetails studentAccountDetails) throws SQLException {
         try (Connection conn = getConnection()) {

@@ -3,6 +3,7 @@ package com.millenialspiders.garbagehound.model;
 import java.time.DayOfWeek;
 import java.util.Set;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableSet;
 
 /**
  * Account details for instructors
@@ -13,14 +14,29 @@ public class InstructorAccountDetails extends AccountDetails {
     private final Set<StudentAccountDetails> myStudents;
 
     private InstructorAccountDetails(InstructorAccountDetailsBuilder builder) {
-        this.courses = builder.courses;
-        this.preferredDaySlot = builder.preferredDaySlot;
-        this.myStudents = builder.myStudents;
+        this.courses = builder.courses != null
+                ? ImmutableSet.copyOf(builder.courses) : ImmutableSet.of();
+        this.preferredDaySlot = builder.preferredDaySlot != null
+                ? ImmutableSet.copyOf(builder.preferredDaySlot) : ImmutableSet.of();
+        this.myStudents = builder.myStudents != null
+                ? ImmutableSet.copyOf(builder.myStudents) : ImmutableSet.of();
 
         this.setFirstName(builder.firstName);
         this.setLastName(builder.lastName);
         this.setEmailAddress(builder.emailAddress);
         this.setPhoneNo(builder.phoneNo);
+    }
+
+    public Set<Course> getCourses() {
+        return courses;
+    }
+
+    public Set<DayOfWeek> getPreferredDaySlot() {
+        return preferredDaySlot;
+    }
+
+    public Set<StudentAccountDetails> getMyStudents() {
+        return myStudents;
     }
 
     public static class InstructorAccountDetailsBuilder {
