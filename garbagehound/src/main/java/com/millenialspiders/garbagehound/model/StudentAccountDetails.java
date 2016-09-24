@@ -14,9 +14,12 @@ public class StudentAccountDetails extends AccountDetails {
     private final Set<InstructorAccountDetails> myInstructors;
 
     private StudentAccountDetails(StudentAccountDetailsBuilder builder) {
-        this.courses = ImmutableSet.copyOf(builder.courses);
-        this.preferredDaySlot = ImmutableSet.copyOf(builder.preferredDaySlot);
-        this.myInstructors = ImmutableSet.copyOf(builder.myInstructors);
+        this.courses = builder.courses != null
+                ? ImmutableSet.copyOf(builder.courses) : ImmutableSet.of();
+        this.preferredDaySlot = builder.preferredDaySlot != null
+                ? ImmutableSet.copyOf(builder.preferredDaySlot) : ImmutableSet.of();
+        this.myInstructors = builder.myInstructors != null
+                ? ImmutableSet.copyOf(builder.myInstructors) : ImmutableSet.of();
         setEmailAddress(builder.emailAddress);
         setFirstName(builder.firstName);
         setLastName(builder.lastName);
