@@ -180,6 +180,28 @@
                                  referencedColumnNames="course_id"/>
     </changeSet>
 
+    <changeSet id="8" author="lordbritishix">
+        <comment>Creates the table that will associate a student with an instructor - and vice versa</comment>
+        <createTable tableName="account_account">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="instructor_account_id" type="bigint"/>
+            <column name="student_account_id" type="bigint"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="account_account"
+                                 baseColumnNames="instructor_account_id"
+                                 constraintName="fk_account_account_instructor"
+                                 referencedTableName="account"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="account_account"
+                                 baseColumnNames="student_account_id"
+                                 constraintName="fk_account_account_student"
+                                 referencedTableName="account"
+                                 referencedColumnNames="id"/>
+    </changeSet>
 
 
 </databaseChangeLog>

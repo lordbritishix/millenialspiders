@@ -1,11 +1,15 @@
 package com.millenialspiders.garbagehound.common.db;
 
+import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.DayOfWeek;
-
+import com.google.appengine.tools.cloudstorage.GcsFileOptions;
+import com.google.appengine.tools.cloudstorage.GcsFilename;
+import com.google.appengine.tools.cloudstorage.GcsService;
 import com.google.inject.Inject;
 import com.millenialspiders.garbagehound.common.config.AppConfig;
 import com.millenialspiders.garbagehound.model.Account;
@@ -16,9 +20,13 @@ import com.millenialspiders.garbagehound.model.StudentAccountDetails;
  * DAO for account registration
  */
 public class AccountDAO extends GarbageHoundDataSource {
+    private static final String BUCKET_NAME = "garbagehound-142922.appspot.com";
+    private final GcsService gcsService;
+
     @Inject
-    public AccountDAO(AppConfig appConfig) {
+    public AccountDAO(AppConfig appConfig, GcsService gcsService) {
         super(appConfig);
+        this.gcsService = gcsService;
     }
 
     public void registerAccount(Account account) throws SQLException {
@@ -155,5 +163,11 @@ public class AccountDAO extends GarbageHoundDataSource {
             stmt.executeUpdate();
             return 1;
         }
+    }
+
+    public void uploadProfilePhoto(String username, ByteBuffer rawPhoto) throws IOException {
+        GcsFileOptions instance = GcsFileOptions.getDefaultInstance();
+        GcsFilename fileName = new GcsFilename(BUCKET_NAME, username);
+        gcsService.createOrReplace(fileName, instance, rawPhoto);
     }
 }
