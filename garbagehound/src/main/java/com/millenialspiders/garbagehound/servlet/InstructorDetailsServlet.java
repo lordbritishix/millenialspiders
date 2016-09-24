@@ -39,7 +39,7 @@ public class InstructorDetailsServlet extends HttpServlet {
             accDAO.createInstructorAccount(username, instructor);
             ServletUtils.writeSuccess(resp, true);
         } catch (SQLException e) {
-            throw new ServletException("Unable to insert new account to the db", e);
+            throw new ServletException("Unable to insert instructor info to the db", e);
         }
     }
 }

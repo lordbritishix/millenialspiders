@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.DayOfWeek;
+
 import com.google.inject.Inject;
 import com.millenialspiders.garbagehound.common.config.AppConfig;
 import com.millenialspiders.garbagehound.model.Account;
@@ -36,23 +38,32 @@ public class AccountDAO extends GarbageHoundDataSource {
             stmt.executeUpdate();
         }
     }
-
-    public int createInstructorAccount(String username, InstructorAccountDetails instructor) 
-    throws SQLException {
+    
+    private int findAccountId(String username) throws SQLException {
         try (Connection conn = getConnection()) {
             PreparedStatement stmt = null;
-            String query = "SELECT id FROM "
-                    + "account WHERE username LIKE ?";
-            //no additional check for whether or not they are an instructor
-            stmt = conn.prepareStatement(query);
+            String query = "SELECT id FROM account WHERE username LIKE ?";
+            stmt  = conn.prepareStatement(query);
             stmt.setString(1, username);
             ResultSet rs = stmt.executeQuery();
             if (!rs.isBeforeFirst())
                 return 0;
             rs.first();
-            query = "INSERT INTO instructor_account_detail VALUES(DEFAULT, ?, ?, ?, ?, ?)";
+            return rs.getInt("id");
+        }
+    }
+    
+    public int createInstructorAccount(String username, InstructorAccountDetails instructor) 
+    throws SQLException {
+        try (Connection conn = getConnection()) {
+            int accountId = findAccountId(username);
+            
+            if (accountId == 0)
+                return 0;
+            PreparedStatement stmt = null;
+            String query = "INSERT INTO instructor_account_detail VALUES(DEFAULT, ?, ?, ?, ?, ?)";
             stmt = conn.prepareStatement(query);
-            stmt.setInt(1, rs.getInt("id"));
+            stmt.setInt(1, accountId);
             stmt.setString(2, instructor.getFirstName());
             stmt.setString(3, instructor.getLastName());
             stmt.setString(4, instructor.getEmailAddress());
@@ -80,22 +91,63 @@ public class AccountDAO extends GarbageHoundDataSource {
         }
     }
 
+    public int addAccountDay(String username, String day) throws SQLException {
+        try (Connection conn = getConnection()) {
+            int accountId = findAccountId(username);
+            
+            if (accountId == 0)
+                return 0;
+            
+            PreparedStatement stmt = null;
+            String query = "INSERT INTO account_day_of_week VALUES(DEFAULT, ?, ?)";            
+
+            //getting day of week number
+            DayOfWeek dayNo = DayOfWeek.valueOf(day.toUpperCase());
+
+            stmt = conn.prepareStatement(query);
+            stmt.setInt(1, accountId);
+            stmt.setInt(2, dayNo.getValue());
+            
+            stmt.executeUpdate();
+            return 1;
+        }
+    }
+    
+    public int deleteAccountDay(String username, String day) throws SQLException {
+        try (Connection conn = getConnection()) {
+            int accountId = findAccountId(username);
+            
+            if (accountId == 0)
+                return 0;
+            
+            PreparedStatement stmt = null;
+            String query = "DELETE FROM account_day_of_week WHERE "
+                    + "account_id = ? AND "
+                    + "day_of_week_id = ?";            
+
+            //getting day of week number
+            DayOfWeek dayNo = DayOfWeek.valueOf(day.toUpperCase());
+
+            stmt = conn.prepareStatement(query);
+            stmt.setInt(1, accountId);
+            stmt.setInt(2, dayNo.getValue());
+            
+            stmt.executeUpdate();
+            return 1;
+        }
+        
+    }
+    
     public int createStudentDetails(String username, StudentAccountDetails student) throws SQLException {
         try (Connection conn = getConnection()) {
-            PreparedStatement stmt = null;
-            String query = "SELECT id FROM "
-                    + "account WHERE username LIKE ?";
-            stmt = conn.prepareStatement(query);
-            stmt.setString(1, username);
-            ResultSet rs = stmt.executeQuery();
-            if (!rs.isBeforeFirst()) {
+            int accountId = findAccountId(username);
+            
+            if (accountId == 0)
                 return 0;
-            }
-            rs.first();
-
-            query = "INSERT INTO student_account_detail VALUES(DEFAULT, ?, ?, ?, ?, ?)";
+            PreparedStatement stmt = null;
+            String query = "INSERT INTO student_account_detail VALUES(DEFAULT, ?, ?, ?, ?, ?)";
             stmt = conn.prepareStatement(query);
-            stmt.setInt(1, rs.getInt("id"));
+            stmt.setInt(1, accountId);
             stmt.setString(2, student.getFirstName());
             stmt.setString(3, student.getLastName());
             stmt.setString(4, student.getEmailAddress());
