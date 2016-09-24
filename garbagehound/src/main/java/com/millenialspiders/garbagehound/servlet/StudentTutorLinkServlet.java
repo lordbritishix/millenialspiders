@@ -14,35 +14,36 @@ import com.google.inject.Injector;
 import com.millenialspiders.garbagehound.common.db.AccountDAO;
 import com.millenialspiders.garbagehound.common.guice.GarbageHoundModule;
 
-@WebServlet("/accountAvailability")
-public class AccountAvailabilityServlet extends HttpServlet {
+@WebServlet("/matchmake")
+public class StudentTutorLinkServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String username = req.getParameter("username");
-        String day = req.getParameter("day");
+        String studentUsername = req.getParameter("studentUsername");
+        String tutorUsername = req.getParameter("tutorUsername");
         
         Injector injector = Guice.createInjector(new GarbageHoundModule());
         AccountDAO accDAO = injector.getInstance(AccountDAO.class);
+        
         try {
-            accDAO.addAccountDay(username, day);
+            accDAO.createStudentTutorLink(studentUsername, tutorUsername);
             ServletUtils.writeSuccess(resp, true);
         } catch (SQLException e) {
             throw new ServletException("Unable to insert day info to the db", e);
         }
     }
-    
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String username = req.getParameter("username");
-        String day = req.getParameter("day");
+        String studentUsername = req.getParameter("studentUsername");
+        String tutorUsername = req.getParameter("tutorUsername");
         
         Injector injector = Guice.createInjector(new GarbageHoundModule());
         AccountDAO accDAO = injector.getInstance(AccountDAO.class);
+        
         try {
-            accDAO.deleteAccountDay(username, day);
+            accDAO.deleteStudentTutorLink(studentUsername, tutorUsername);
             ServletUtils.writeSuccess(resp, true);
         } catch (SQLException e) {
-            throw new ServletException("Unable to delete day info to the db", e);
+            throw new ServletException("Unable to insert day info to the db", e);
         }
     }
 }
