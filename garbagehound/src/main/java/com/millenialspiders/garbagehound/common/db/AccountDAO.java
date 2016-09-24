@@ -80,12 +80,28 @@ public class AccountDAO extends GarbageHoundDataSource {
         }
     }
 
-    public int createStudentAccountForAccount(
-            Account account, StudentAccountDetails studentAccountDetails) throws SQLException {
+    public int createStudentDetails(String username, StudentAccountDetails student) throws SQLException {
         try (Connection conn = getConnection()) {
-            //Statement statement = conn.createStatement();
-        }
+            PreparedStatement stmt = null;
+            String query = "SELECT id FROM "
+                    + "account WHERE username LIKE ?";
+            stmt = conn.prepareStatement(query);
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+            if (!rs.isBeforeFirst()) {
+                return 0;
+            }
+            rs.first();
 
-        return 0;
-    };
+            query = "INSERT INTO student_account_detail VALUES(DEFAULT, ?, ?, ?, ?, ?)";
+            stmt = conn.prepareStatement(query);
+            stmt.setInt(1, rs.getInt("id"));
+            stmt.setString(2, student.getFirstName());
+            stmt.setString(3, student.getLastName());
+            stmt.setString(4, student.getEmailAddress());
+            stmt.setString(5, student.getPhoneNo());
+            stmt.executeUpdate();
+            return 1;
+        }
+    }
 }
