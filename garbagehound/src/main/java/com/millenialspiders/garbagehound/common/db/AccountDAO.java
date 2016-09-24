@@ -72,7 +72,7 @@ public class AccountDAO extends GarbageHoundDataSource {
             return 1;
         }
     }
-    public int addInstructorDay(String username, String day) throws SQLException {
+    public int addAccountDay(String username, String day) throws SQLException {
         try (Connection conn = getConnection()) {
             int accountId = findAccountId(username);
             
@@ -94,7 +94,7 @@ public class AccountDAO extends GarbageHoundDataSource {
         }
     }
     
-    public int deleteInstructorDay(String username, String day) throws SQLException {
+    public int deleteAccountDay(String username, String day) throws SQLException {
         try (Connection conn = getConnection()) {
             int accountId = findAccountId(username);
             

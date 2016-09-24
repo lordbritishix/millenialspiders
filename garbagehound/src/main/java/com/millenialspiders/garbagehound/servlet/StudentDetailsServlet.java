@@ -29,8 +29,6 @@ import com.millenialspiders.garbagehound.model.StudentAccountDetails;
 public class StudentDetailsServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        Injector injector = Guice.createInjector(new GarbageHoundModule());
-
         String username = req.getParameter("username");
         String firstName = req.getParameter("firstName");
         String lastName = req.getParameter("lastName");
@@ -46,6 +44,7 @@ public class StudentDetailsServlet extends HttpServlet {
                 .withPhoneNo(phone)
                 .build();
 
+        Injector injector = Guice.createInjector(new GarbageHoundModule());
         AccountDAO accDAO = injector.getInstance(AccountDAO.class);
 
         try {

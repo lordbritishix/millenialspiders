@@ -14,8 +14,8 @@ import com.google.inject.Injector;
 import com.millenialspiders.garbagehound.common.db.AccountDAO;
 import com.millenialspiders.garbagehound.common.guice.GarbageHoundModule;
 
-@WebServlet("/instructorDay")
-public class InstructorDayServlet extends HttpServlet {
+@WebServlet("/accountAvailability")
+public class AccountAvailabilityServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String username = req.getParameter("username");
@@ -24,7 +24,7 @@ public class InstructorDayServlet extends HttpServlet {
         Injector injector = Guice.createInjector(new GarbageHoundModule());
         AccountDAO accDAO = injector.getInstance(AccountDAO.class);
         try {
-            accDAO.addInstructorDay(username, day);
+            accDAO.addAccountDay(username, day);
             ServletUtils.writeSuccess(resp);
         } catch (SQLException e) {
             throw new ServletException("Unable to insert instructor day info to the db", e);
@@ -39,7 +39,7 @@ public class InstructorDayServlet extends HttpServlet {
         Injector injector = Guice.createInjector(new GarbageHoundModule());
         AccountDAO accDAO = injector.getInstance(AccountDAO.class);
         try {
-            accDAO.deleteInstructorDay(username, day);
+            accDAO.deleteAccountDay(username, day);
             ServletUtils.writeSuccess(resp);
         } catch (SQLException e) {
             throw new ServletException("Unable to delete instructor day info to the db", e);
