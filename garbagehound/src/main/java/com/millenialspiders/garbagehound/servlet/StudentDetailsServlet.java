@@ -49,7 +49,7 @@ public class StudentDetailsServlet extends HttpServlet {
 
         try {
             accDAO.createStudentDetails(username, student);
-            ServletUtils.writeSuccess(resp);
+            ServletUtils.writeSuccess(resp, true);
         } catch (SQLException e) {
             throw new ServletException("Unable to insert student details to the db", e);
         }

@@ -37,7 +37,7 @@ public class InstructorDetailsServlet extends HttpServlet {
         AccountDAO accDAO = injector.getInstance(AccountDAO.class);
         try {
             accDAO.createInstructorAccount(username, instructor);
-            ServletUtils.writeSuccess(resp);
+            ServletUtils.writeSuccess(resp, true);
         } catch (SQLException e) {
             throw new ServletException("Unable to insert instructor info to the db", e);
         }

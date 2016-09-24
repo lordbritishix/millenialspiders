@@ -6,12 +6,12 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.JsonObject;
 
 class ServletUtils {
-    static void writeSuccess(HttpServletResponse resp) throws IOException {
+    static void writeSuccess(HttpServletResponse resp, boolean isSuccess) throws IOException {
         PrintWriter out = resp.getWriter();
         resp.setContentType("application/json");
 
         JsonObject ret = new JsonObject();
-        ret.addProperty("success", true);
+        ret.addProperty("success", isSuccess);
 
         out.write(ret.toString());
     }

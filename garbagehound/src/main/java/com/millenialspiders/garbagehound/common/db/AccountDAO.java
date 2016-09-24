@@ -72,6 +72,25 @@ public class AccountDAO extends GarbageHoundDataSource {
             return 1;
         }
     }
+
+    public boolean isUserExists(String username, String password) throws SQLException {
+        try (Connection conn = getConnection()) {
+            String query = "SELECT COUNT(id) AS idCount FROM account WHERE username = ? AND PASSWORD = ?";
+
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, username);
+            stmt.setString(2, password);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (!rs.first()) {
+                return false;
+            }
+
+            return rs.getInt("idCount") >= 1;
+        }
+    }
+
     public int addAccountDay(String username, String day) throws SQLException {
         try (Connection conn = getConnection()) {
             int accountId = findAccountId(username);
@@ -137,13 +156,4 @@ public class AccountDAO extends GarbageHoundDataSource {
             return 1;
         }
     }
-
-    public int createStudentAccountForAccount(
-            Account account, StudentAccountDetails studentAccountDetails) throws SQLException {
-        try (Connection conn = getConnection()) {
-            //Statement statement = conn.createStatement();
-        }
-
-        return 0;
-    };
 }
