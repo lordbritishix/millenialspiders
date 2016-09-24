@@ -46,11 +46,9 @@ public class RegistrationServlet extends HttpServlet {
 
         try {
             accDAO.registerAccount(account);
-            ServletUtils.writeSuccess(resp);
+            ServletUtils.writeSuccess(resp, true);
         } catch (SQLException e) {
             throw new ServletException("Unable to insert new account to the db", e);
         }
-
-        ServletUtils.writeSuccess(resp);
     }
 }

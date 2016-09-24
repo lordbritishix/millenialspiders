@@ -25,7 +25,7 @@ public class DbRollbackServlet extends HttpServlet {
 
         try {
             adminDAO.rollbackDb();
-            ServletUtils.writeSuccess(resp);
+            ServletUtils.writeSuccess(resp, true);
         } catch (SQLException | LiquibaseException e) {
             throw new ServletException("Unable to rollback the db", e);
         }
