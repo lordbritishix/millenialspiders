@@ -11,15 +11,18 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.JsonObject;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.millenialspiders.garbagehound.common.db.HealthDAO;
+import com.millenialspiders.garbagehound.common.db.AdminDAO;
 import com.millenialspiders.garbagehound.common.guice.GarbageHoundModule;
 
+/**
+ * Checks the servlet health and server info
+ */
 @WebServlet("/health")
 public class HealthServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         Injector injector = Guice.createInjector(new GarbageHoundModule());
-        HealthDAO healthDAO = injector.getInstance(HealthDAO.class);
+        AdminDAO adminDAO = injector.getInstance(AdminDAO.class);
 
         PrintWriter out = resp.getWriter();
 
@@ -31,7 +34,7 @@ public class HealthServlet extends HttpServlet {
         ret.addProperty("serverInfo", getServletContext().getServerInfo());
 
         try {
-            ret.addProperty("isDbAlive", healthDAO.isDbAlive());
+            ret.addProperty("isDbAlive", adminDAO.isDbAlive());
         } catch (SQLException e) {
             throw new ServletException("Error checking if DB is alive", e);
         }

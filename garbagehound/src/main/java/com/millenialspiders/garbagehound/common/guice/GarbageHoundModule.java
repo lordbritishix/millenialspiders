@@ -12,7 +12,7 @@ import com.millenialspiders.garbagehound.common.config.AppConfig;
  * Responsible for producing dependencies for GarbageHound
  */
 public class GarbageHoundModule extends AbstractModule {
-    private static final String PROPERTIES_GCLOUD = "common.gcloud.properties";
+    private static final String PROPERTIES_GCLOUD = "config/common.gcloud.properties";
 
     @Override
     protected void configure() {

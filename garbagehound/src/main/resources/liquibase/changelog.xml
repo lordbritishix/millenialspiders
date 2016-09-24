@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <preConditions>
+        <runningAs username="garbagehound1"/>
+    </preConditions>
+
+    <changeSet id="0" author="lordbritishix">
+        <comment>Creates the account type constant table containing STUDENT and TEACHER</comment>
+        <createTable tableName="account_type">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="accountType" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <insert tableName="account_type">
+            <column name="accountType">STUDENT</column>
+        </insert>
+        <insert tableName="account_type">
+            <column name="accountType">TEACHER</column>
+        </insert>
+
+        <rollback>
+            <dropTable tableName="account_type"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="1" author="lordbritishix">
+        <comment>Creates the account table that is used to store user accounts. Password should be md5'd</comment>
+        <createTable tableName="account">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="username" type="varchar(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="password" type="varchar(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="account_type_id" type="int"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="account"
+                                 baseColumnNames="account_type_id"
+                                 constraintName="fk_account_type_id"
+                                 referencedTableName="account_type"
+                                 referencedColumnNames="id"/>
+
+        <rollback>
+            <dropTable tableName="account"/>
+        </rollback>
+    </changeSet>
+
+
+</databaseChangeLog>

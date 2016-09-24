@@ -1,0 +1,41 @@
+Flow:
+Registration
+  Inputs - email, password
+
+Account modification -
+  First name, Last name
+
+Declare intent:
+  - Subjects interested, Availability, From, To
+
+Instructor picker
+  - 1st level - Display instructor tile (name, pic, subject badges)
+  - 2nd level - Detailed info of instructor, school
+        Years of exp
+        Degree
+        1 liner Bio
+        Reviews
+
+Acceptance
+  - Check, congratulations, 2 way handshake
+
+My teachers tab
+
+
+Nice to have features
+1. 2 way handshake
+
+
+Afternoon -
+1. Registration Students and Teachers
+
+
+5:00 PM
+1. Account Modification
+
+End of the day
+1. Match making / Matches
+
+Next Day
+1. Notificaction
+2. Presentations
