@@ -4,10 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import com.google.inject.Inject;
 import com.millenialspiders.garbagehound.common.config.AppConfig;
 import com.millenialspiders.garbagehound.model.Account;
+import com.millenialspiders.garbagehound.model.InstructorAccountDetails;
 import com.millenialspiders.garbagehound.model.StudentAccountDetails;
 
 /**
@@ -37,10 +37,34 @@ public class AccountDAO extends GarbageHoundDataSource {
         }
     }
 
+    public int createInstructorAccount(String username, InstructorAccountDetails instructor) 
+    throws SQLException {
+        try (Connection conn = getConnection()) {
+            PreparedStatement stmt = null;
+            String query = "SELECT id FROM "
+                    + "account WHERE username LIKE ?";
+            //no additional check for whether or not they are an instructor
+            stmt = conn.prepareStatement(query);
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+            if (!rs.isBeforeFirst())
+                return 0;
+            rs.first();
+            query = "INSERT INTO instructor_account_detail VALUES(DEFAULT, ?, ?, ?, ?, ?)";
+            stmt = conn.prepareStatement(query);
+            stmt.setInt(1, rs.getInt("id"));
+            stmt.setString(2, instructor.getFirstName());
+            stmt.setString(3, instructor.getLastName());
+            stmt.setString(4, instructor.getEmailAddress());
+            stmt.setString(5, instructor.getPhoneNo());
+            stmt.executeUpdate();
+            return 1;
+        }
+    }
     public int createStudentAccountForAccount(
             Account account, StudentAccountDetails studentAccountDetails) throws SQLException {
         try (Connection conn = getConnection()) {
-            Statement statement = conn.createStatement();
+            //Statement statement = conn.createStatement();
         }
 
         return 0;
