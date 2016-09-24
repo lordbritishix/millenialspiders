@@ -54,7 +54,108 @@
                                  referencedColumnNames="id"/>
 
         <rollback>
+            <dropAllForeignKeyConstraints baseTableName="account"/>
             <dropTable tableName="account"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="2" author="lordbritishix">
+        <comment>Creates the course table</comment>
+        <createTable tableName="course">
+            <column name="courseId" type="varchar(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="courseName" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <rollback>
+            <dropTable tableName="course"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="3" author="lordbritishix">
+        <comment>Creates the days of the week constants table</comment>
+        <createTable tableName="days_of_the_week">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(50)"/>
+        </createTable>
+        <insert tableName="days_of_the_week">
+            <column name="name">MONDAY</column>
+        </insert>
+        <insert tableName="days_of_the_week">
+            <column name="name">TUESDAY</column>
+        </insert>
+        <insert tableName="days_of_the_week">
+            <column name="name">WEDNESDAY</column>
+        </insert>
+        <insert tableName="days_of_the_week">
+            <column name="name">THURSDAY</column>
+        </insert>
+        <insert tableName="days_of_the_week">
+            <column name="name">FRIDAY</column>
+        </insert>
+        <insert tableName="days_of_the_week">
+            <column name="name">SATURDAY</column>
+        </insert>
+        <insert tableName="days_of_the_week">
+            <column name="name">SUNDAY</column>
+        </insert>
+        <rollback>
+            <dropTable tableName="account_type"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="4" author="lordbritishix">
+        <comment>Creates the student account detail table that is used to store student details</comment>
+        <createTable tableName="student_account_detail">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="account_id" type="bigint"/>
+            <column name="firstname" type="varchar(50)"/>
+            <column name="lastname" type="varchar(50)"/>
+            <column name="emailaddress" type="varchar(50)"/>
+            <column name="mainphone" type="varchar(50)"/>
+
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="student_account_detail"
+                                 baseColumnNames="id"
+                                 constraintName="fk_student_account_account_id"
+                                 referencedTableName="account"
+                                 referencedColumnNames="id"/>
+
+        <rollback>
+            <dropAllForeignKeyConstraints baseTableName="student_account_detail"/>
+            <dropTable tableName="student_account_detail"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="5" author="lordbritishix">
+        <comment>Creates the instructor account detail table that is used to store instructor details</comment>
+        <createTable tableName="instructor_account_detail">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="account_id" type="bigint"/>
+            <column name="firstname" type="varchar(50)"/>
+            <column name="lastname" type="varchar(50)"/>
+            <column name="emailaddress" type="varchar(50)"/>
+            <column name="mainphone" type="varchar(50)"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="instructor_account_detail"
+                                 baseColumnNames="id"
+                                 constraintName="fk_instructor_account_account_id"
+                                 referencedTableName="account"
+                                 referencedColumnNames="id"/>
+
+        <rollback>
+            <dropAllForeignKeyConstraints baseTableName="instructor_account_detail"/>
+            <dropTable tableName="instructor_account_detail"/>
         </rollback>
     </changeSet>
 

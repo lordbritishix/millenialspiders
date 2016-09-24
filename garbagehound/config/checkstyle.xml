@@ -78,9 +78,6 @@
         <!--    <module name="DoubleCheckedLocking"/>  NO LONGER AVAILABLE IN CHECKSTYLE 5.6 -->
         <module name="EmptyStatement"/>
         <!--        <module name="EqualsHashCode"/> -->
-        <module name="HiddenField">
-            <property name="ignoreConstructorParameter" value="true"/>
-        </module>
         <module name="IllegalInstantiation"/>
         <module name="InnerAssignment"/>
         <!--
