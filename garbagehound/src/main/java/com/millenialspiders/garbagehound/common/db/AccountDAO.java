@@ -156,4 +156,42 @@ public class AccountDAO extends GarbageHoundDataSource {
             return 1;
         }
     }
+    
+    public int createStudentTutorLink(String studentUsername, 
+            String tutorUsername) throws SQLException {
+        try (Connection conn = getConnection()) {
+            int studentId = findAccountId(studentUsername);
+            int tutorId  = findAccountId(tutorUsername);
+            
+            if (studentId == 0 | tutorId == 0)
+                return 0;
+            
+            PreparedStatement stmt = null;
+            String query = "INSERT INTO account_account VALUES(DEFAULT, ?, ?)";
+            stmt = conn.prepareStatement(query);
+            stmt.setInt(1, tutorId);
+            stmt.setInt(2, studentId);
+            stmt.executeUpdate();
+            return 1;
+        }
+    }
+    public int deleteStudentTutorLink(String studentUsername, 
+            String tutorUsername) throws SQLException {
+        try (Connection conn = getConnection()) {
+            int studentId = findAccountId(studentUsername);
+            int tutorId  = findAccountId(tutorUsername);
+            
+            if (studentId == 0 | tutorId == 0)
+                return 0;
+            
+            PreparedStatement stmt = null;
+            String query = "DELETE FROM account_account WHERE instructor_account_id=?"
+                    + " AND student_account_id=?";
+            stmt = conn.prepareStatement(query);
+            stmt.setInt(1, tutorId);
+            stmt.setInt(2, studentId);
+            stmt.executeUpdate();
+            return 1;
+        }
+    }
 }
