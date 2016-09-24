@@ -1,6 +1,8 @@
 package com.millenialspiders.garbagehound.common.db;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import com.google.inject.Inject;
@@ -17,8 +19,22 @@ public class AccountDAO extends GarbageHoundDataSource {
         super(appConfig);
     }
 
-    public void registerAccount() {
-
+    public void registerAccount(Account account) throws SQLException {
+        try (Connection conn = getConnection()) {
+            PreparedStatement stmt = null;
+            String query = "SELECT id FROM "
+                    + "account_type WHERE accountType LIKE ?";
+            stmt = conn.prepareStatement(query);
+            stmt.setString(1, account.getAccountType().name());
+            ResultSet rs = stmt.executeQuery();
+            rs.first();
+            query = "INSERT INTO account VALUES(DEFAULT, ?, ?, ?)";
+            stmt = conn.prepareStatement(query);
+            stmt.setString(1, account.getUsername());
+            stmt.setString(2, account.getPassword());
+            stmt.setInt(3, rs.getInt("id"));
+            stmt.executeUpdate();
+        }
     }
 
     public int createStudentAccountForAccount(
