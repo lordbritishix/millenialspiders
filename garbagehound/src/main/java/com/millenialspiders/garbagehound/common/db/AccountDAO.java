@@ -65,7 +65,7 @@ public class AccountDAO extends GarbageHoundDataSource {
     public int createStudentDetails(String username, StudentAccountDetails student) throws SQLException {
         try (Connection conn = getConnection()) {
             PreparedStatement stmt = null;
-            String query = "SELECT id FROM"
+            String query = "SELECT id FROM "
                     + "account WHERE username LIKE ?";
             stmt = conn.prepareStatement(query);
             stmt.setString(1, username);
