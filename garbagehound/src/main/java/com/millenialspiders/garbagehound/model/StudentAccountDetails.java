@@ -24,6 +24,7 @@ public class StudentAccountDetails extends AccountDetails {
         setFirstName(builder.firstName);
         setLastName(builder.lastName);
         setPhoneNo(builder.phoneNo);
+        setUsername(builder.username);
     }
 
     public Set<Course> getCourses() {
@@ -46,6 +47,7 @@ public class StudentAccountDetails extends AccountDetails {
         private String lastName;
         private String emailAddress;
         private String phoneNo;
+        private String username;
 
         public static StudentAccountDetailsBuilder newInstance() {
             return new StudentAccountDetailsBuilder();
@@ -83,6 +85,11 @@ public class StudentAccountDetails extends AccountDetails {
 
         public StudentAccountDetailsBuilder withPreferredDaySlot(Set<DayOfWeek> preferredDaySlot) {
             this.preferredDaySlot = preferredDaySlot;
+            return this;
+        }
+
+        public StudentAccountDetailsBuilder withUsername(String username) {
+            this.username = username;
             return this;
         }
 
