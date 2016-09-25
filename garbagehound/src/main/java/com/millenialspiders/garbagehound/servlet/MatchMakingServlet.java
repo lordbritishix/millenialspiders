@@ -86,16 +86,16 @@ public class MatchMakingServlet extends HttpServlet {
         ret.addProperty("email", studentAccountDetails.getEmailAddress());
 
         JsonArray availabilityList = new JsonArray();
-        courses.entrySet().stream().map(entrySet -> {
+        availability.entrySet().stream().map(entrySet -> {
             JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("dayOfWeek", entrySet.getKey());
+            jsonObject.addProperty("dayOfWeek", entrySet.getKey().toString());
             jsonObject.addProperty("isMatched", entrySet.getValue());
             availabilityList.add(jsonObject);
             return jsonObject;
         }).collect(Collectors.toSet());
 
         JsonArray coursesList = new JsonArray();
-        availability.entrySet().stream().map(entrySet -> {
+        courses.entrySet().stream().map(entrySet -> {
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("courseId", entrySet.getKey().toString());
             jsonObject.addProperty("isMatched", entrySet.getValue());
