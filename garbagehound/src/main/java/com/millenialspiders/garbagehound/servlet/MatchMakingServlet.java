@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.time.DayOfWeek;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -42,7 +43,7 @@ public class MatchMakingServlet extends HttpServlet {
             }
 
             Set<InstructorAccountDetails> instructors = accountDAO.getAllInstructors();
-            Set<CompatibilityScore> score = ServletUtils.matchMake(student, instructors);
+            List<CompatibilityScore> score = ServletUtils.matchMake(student, instructors);
 
             JsonArray returnValue = new JsonArray();
 

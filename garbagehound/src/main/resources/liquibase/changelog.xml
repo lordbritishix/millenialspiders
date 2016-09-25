@@ -217,4 +217,21 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="11" author="lordbritishix">
+        <comment>Drop constraint and add new one</comment>
+        <dropAllForeignKeyConstraints baseTableName="student_account_detail"/>
+        <dropAllForeignKeyConstraints baseTableName="instructor_account_detail"/>
+
+        <addForeignKeyConstraint baseTableName="instructor_account_detail"
+                                 baseColumnNames="account_id"
+                                 constraintName="fk_instructor_account_account_id"
+                                 referencedTableName="account"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="student_account_detail"
+                                 baseColumnNames="account_id"
+                                 constraintName="fk_student_account_account_id"
+                                 referencedTableName="account"
+                                 referencedColumnNames="id"/>
+    </changeSet>
 </databaseChangeLog>

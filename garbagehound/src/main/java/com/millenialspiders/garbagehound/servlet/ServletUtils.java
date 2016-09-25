@@ -2,6 +2,7 @@ package com.millenialspiders.garbagehound.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
@@ -26,11 +27,11 @@ class ServletUtils {
         resp.addHeader("Access-Control-Allow-Headers","Origin, X-Requested-With, Content-Type, Accept");
     }
 
-    static Set<CompatibilityScore> matchMake(StudentAccountDetails student, Set<InstructorAccountDetails> instructors) {
+    static List<CompatibilityScore> matchMake(StudentAccountDetails student, Set<InstructorAccountDetails> instructors) {
         return instructors.stream()
                 .map(instructor -> new CompatibilityScore(instructor, student))
                 .filter(score -> score.getScore() > 0)
-                .sorted((p, q) -> p.getScore() - q.getScore())
-                .collect(Collectors.toSet());
+                .sorted((p, q) -> q.getScore() - p.getScore())
+                .collect(Collectors.toList());
     }
 }

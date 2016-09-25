@@ -176,7 +176,7 @@ public class AccountDAO extends GarbageHoundDataSource {
                 return 0;
             }
             PreparedStatement stmt = null;
-            String query = "INSERT INTO student_account_detail VALUES(DEFAULT, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO student_account_detail VALUES(DEFAULT, ?, ?, ?, ?, ?, DEFAULT)";
             stmt = conn.prepareStatement(query);
             stmt.setInt(1, accountId);
             stmt.setString(2, student.getFirstName());
