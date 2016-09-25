@@ -31,9 +31,18 @@
             android:textColor="@color/primary" />
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:text="Tutors based on availability and course matches"
+        android:textSize="@dimen/text_size_medium" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/tutorList"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_below="@+id/title" />
 
 </RelativeLayout>

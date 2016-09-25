@@ -13,7 +13,7 @@ public class Utils {
         } else if (weekday.toLowerCase().contains("tuesday")) {
             return Color.MAGENTA;
         } else if (weekday.toLowerCase().contains("wednesday")) {
-            return Color.YELLOW;
+            return Color.GRAY;
         } else if (weekday.toLowerCase().contains("thursday")) {
             return Color.GREEN;
         } else if (weekday.toLowerCase().contains("friday")) {
@@ -30,10 +30,12 @@ public class Utils {
     public static int colorForCourse(String courseId) {
         if (courseId.toLowerCase().contains("comp")) {
             return Color.BLUE;
-        } else if (courseId.contains("poa")) {
-            return Color.BLACK;
-        } else if (courseId.contains("scl")) {
+        } else if (courseId.toLowerCase().contains("poa")) {
+            return Color.RED;
+        } else if (courseId.toLowerCase().contains("scl")) {
             return Color.GREEN;
+        } else if (courseId.toLowerCase().contains("hgw")) {
+            return Color.GRAY;
         }
 
         return Color.DKGRAY;

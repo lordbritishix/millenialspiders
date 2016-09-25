@@ -60,7 +60,7 @@ public class TutorDetailActivity extends BaseActivity {
     private void setupPortrait() {
         Picasso.with(this)
                 .load(mTutor.photo)
-                .resize(200, 200)
+                .resize(400, 400)
                 .transform(new Transformation() {
                     @Override
                     public Bitmap transform(Bitmap source) {
@@ -106,11 +106,11 @@ public class TutorDetailActivity extends BaseActivity {
             if (availability.isMatched) {
 
                 TextView availabilityTextView = new TextView(this);
-                availabilityTextView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                availabilityTextView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
                 availabilityTextView.setText(availability.dayOfWeek);
                 availabilityTextView.setTextColor(Utils.colorForWeekday(availability.dayOfWeek));
-                availabilityTextView.setTextSize(availabilityTextView.getContext().getResources().getDimensionPixelSize(R.dimen.text_size_medium));
+//                availabilityTextView.setTextSize(availabilityTextView.getContext().getResources().getDimensionPixelSize(R.dimen.text_size_small));
                 mAvailabilityLayout.addView(availabilityTextView);
             }
         }
@@ -121,11 +121,11 @@ public class TutorDetailActivity extends BaseActivity {
                 mTutor.courses) {
             if (course.isMatched) {
                 TextView courseTextView = new TextView(this);
-                courseTextView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                courseTextView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
                 courseTextView.setText(course.courseId);
                 courseTextView.setTextColor(Utils.colorForCourse(course.courseId));
-                courseTextView.setTextSize(courseTextView.getContext().getResources().getDimensionPixelSize(R.dimen.text_size_medium));
+//                courseTextView.setTextSize(courseTextView.getContext().getResources().getDimensionPixelSize(R.dimen.text_size_small));
                 mCourseListLayout.addView(courseTextView);
             }
         }

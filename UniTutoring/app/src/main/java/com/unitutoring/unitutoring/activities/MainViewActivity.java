@@ -36,7 +36,7 @@ public class MainViewActivity extends BaseActivity implements TutorListAdapter.T
         mRecyclerView = (RecyclerView) findViewById(R.id.tutorList);
         mRecyclerView.setAdapter(mTutorListViewAdapter);
 
-        mLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
+        mLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         mEmptyLayout = (LinearLayout) findViewById(R.id.emptyLayout);
