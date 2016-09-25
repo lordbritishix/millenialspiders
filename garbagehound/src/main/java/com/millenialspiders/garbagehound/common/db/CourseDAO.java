@@ -10,7 +10,6 @@ import com.millenialspiders.garbagehound.common.config.AppConfig;
 
 /**
  * DAO for Course creation and management
- *
  */
 public class CourseDAO extends GarbageHoundDataSource {
     @Inject

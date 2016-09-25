@@ -203,5 +203,18 @@
                                  referencedColumnNames="id"/>
     </changeSet>
 
+    <changeSet id="9" author="lordbritishix">
+        <comment>Adds a photo location column</comment>
+        <addColumn tableName="student_account_detail">
+            <column name="photoLocation" type="varchar(200)" defaultValue="https://placeholdit.imgix.net/~text?txtsize=20&amp;txt=Add+Photo&amp;w=300&amp;h=300&amp;txttrack=0"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="10" author="lordbritishix">
+        <comment>Adds a photo location column</comment>
+        <addColumn tableName="instructor_account_detail">
+            <column name="photoLocation" type="varchar(200)" defaultValue="https://placeholdit.imgix.net/~text?txtsize=20&amp;txt=Add+Photo&amp;w=300&amp;h=300&amp;txttrack=0"/>
+        </addColumn>
+    </changeSet>
 
 </databaseChangeLog>

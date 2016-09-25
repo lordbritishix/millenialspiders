@@ -19,4 +19,24 @@ public class Course {
     public String getCourseName() {
         return courseName;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Course course = (Course) o;
+
+        return courseId.equals(course.courseId);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return courseId.hashCode();
+    }
 }

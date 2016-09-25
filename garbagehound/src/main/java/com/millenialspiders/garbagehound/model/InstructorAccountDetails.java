@@ -12,6 +12,7 @@ public class InstructorAccountDetails extends AccountDetails {
     private final Set<Course> courses;
     private final Set<DayOfWeek> preferredDaySlot;
     private final Set<StudentAccountDetails> myStudents;
+    private final String photoLocation;
 
     private InstructorAccountDetails(InstructorAccountDetailsBuilder builder) {
         this.courses = builder.courses != null
@@ -20,11 +21,13 @@ public class InstructorAccountDetails extends AccountDetails {
                 ? ImmutableSet.copyOf(builder.preferredDaySlot) : ImmutableSet.of();
         this.myStudents = builder.myStudents != null
                 ? ImmutableSet.copyOf(builder.myStudents) : ImmutableSet.of();
+        this.photoLocation = builder.photoLocation;
 
         this.setFirstName(builder.firstName);
         this.setLastName(builder.lastName);
         this.setEmailAddress(builder.emailAddress);
         this.setPhoneNo(builder.phoneNo);
+        this.setUsername(builder.username);
     }
 
     public Set<Course> getCourses() {
@@ -39,6 +42,10 @@ public class InstructorAccountDetails extends AccountDetails {
         return myStudents;
     }
 
+    public String getPhotoLocation() {
+        return photoLocation;
+    }
+
     public static class InstructorAccountDetailsBuilder {
         private Set<Course> courses;
         private Set<DayOfWeek> preferredDaySlot;
@@ -47,6 +54,8 @@ public class InstructorAccountDetails extends AccountDetails {
         private String lastName;
         private String emailAddress;
         private String phoneNo;
+        private String photoLocation;
+        private String username;
 
         public static InstructorAccountDetailsBuilder newInstance() {
             return new InstructorAccountDetailsBuilder();
@@ -82,8 +91,18 @@ public class InstructorAccountDetails extends AccountDetails {
             return this;
         }
 
+        public InstructorAccountDetailsBuilder withUsername(String username) {
+            this.username = username;
+            return this;
+        }
+
         public InstructorAccountDetailsBuilder withPhoneNo(String phoneNo) {
             this.phoneNo = phoneNo;
+            return this;
+        }
+
+        public InstructorAccountDetailsBuilder withPhotoLocation(String photoLocation) {
+            this.photoLocation = photoLocation;
             return this;
         }
 

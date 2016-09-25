@@ -44,13 +44,4 @@ public class AdminDAO extends GarbageHoundDataSource {
             liquibase.update(new Contexts(), new LabelExpression());
         }
     }
-
-    public void rollbackDb() throws LiquibaseException, SQLException {
-        try (Connection conn = getConnection()) {
-            Database database =
-                    DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(conn));
-            Liquibase liquibase = new Liquibase("liquibase/changelog.xml", new ClassLoaderResourceAccessor(), database);
-            liquibase.rollback(Date.from(Instant.ofEpochSecond(1L)), new Contexts(), new LabelExpression());
-        }
-    }
 }

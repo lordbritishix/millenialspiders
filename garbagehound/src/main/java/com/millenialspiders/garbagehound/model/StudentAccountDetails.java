@@ -12,6 +12,7 @@ public class StudentAccountDetails extends AccountDetails {
     private final Set<Course> courses;
     private final Set<DayOfWeek> preferredDaySlot;
     private final Set<InstructorAccountDetails> myInstructors;
+    private final String photoLocation;
 
     private StudentAccountDetails(StudentAccountDetailsBuilder builder) {
         this.courses = builder.courses != null
@@ -20,6 +21,7 @@ public class StudentAccountDetails extends AccountDetails {
                 ? ImmutableSet.copyOf(builder.preferredDaySlot) : ImmutableSet.of();
         this.myInstructors = builder.myInstructors != null
                 ? ImmutableSet.copyOf(builder.myInstructors) : ImmutableSet.of();
+        this.photoLocation = builder.photoLocation;
         setEmailAddress(builder.emailAddress);
         setFirstName(builder.firstName);
         setLastName(builder.lastName);
@@ -39,6 +41,10 @@ public class StudentAccountDetails extends AccountDetails {
         return myInstructors;
     }
 
+    public String getPhotoLocation() {
+        return photoLocation;
+    }
+
     public static class StudentAccountDetailsBuilder {
         private Set<Course> courses;
         private Set<DayOfWeek> preferredDaySlot;
@@ -48,6 +54,7 @@ public class StudentAccountDetails extends AccountDetails {
         private String emailAddress;
         private String phoneNo;
         private String username;
+        private String photoLocation;
 
         public static StudentAccountDetailsBuilder newInstance() {
             return new StudentAccountDetailsBuilder();
@@ -90,6 +97,11 @@ public class StudentAccountDetails extends AccountDetails {
 
         public StudentAccountDetailsBuilder withUsername(String username) {
             this.username = username;
+            return this;
+        }
+
+        public StudentAccountDetailsBuilder withPhotoLocation(String photoLocation) {
+            this.photoLocation = photoLocation;
             return this;
         }
 
