@@ -35,13 +35,13 @@ public class MainViewActivity extends BaseActivity implements TutorListAdapter.T
 
         mLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(mLayoutManager);
+
+        BackendSingleton.getInstance().getTutorMatches(UserSingleton.getInstance().getUser().email);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d("test", "matches");
-        BackendSingleton.getInstance().getTutorMatches(UserSingleton.getInstance().getUser().email);
     }
 
     @Override
@@ -50,7 +50,8 @@ public class MainViewActivity extends BaseActivity implements TutorListAdapter.T
 
         Tutor tutor = mList.get(position);
         Intent intent = new Intent(this, TutorDetailActivity.class);
-        // TODO: put information of the tutor in the intent
+        String jsonString = tutor.toJSONString();
+        intent.putExtra("tutor", jsonString);
         startActivity(intent);
     }
 

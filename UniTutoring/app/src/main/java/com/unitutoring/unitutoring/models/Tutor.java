@@ -18,6 +18,7 @@ public class Tutor {
     public String lastname;
     public String email;
     public String phoneNo;
+    public String photo;
     public List<Course> courses;
     public List<Availability> availability;
 
@@ -29,6 +30,11 @@ public class Tutor {
         return tutor;
     }
 
+    public String toJSONString() {
+        Gson gson = new Gson();
+        return gson.toJson(this);
+    }
+
     @Override
     public String toString() {
         return "Tutor{" +
@@ -37,6 +43,7 @@ public class Tutor {
                 ", lastname='" + lastname + '\'' +
                 ", email='" + email + '\'' +
                 ", phoneNo='" + phoneNo + '\'' +
+                ", photo='" + photo + '\'' +
                 ", courses=" + courses +
                 ", availability=" + availability +
                 '}';
