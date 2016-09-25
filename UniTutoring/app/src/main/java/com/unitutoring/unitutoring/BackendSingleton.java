@@ -29,7 +29,7 @@ import java.util.Map;
  */
 public class BackendSingleton {
     public static final String ACCOUNT_TYPE_STUDENT = "STUDENT";
-    private static final String BASE_URL = "http://garbagehound-142922.appspot.com/";
+    private static final String BASE_URL = "https://garbagehound-142922.appspot.com/";
 
     private static BackendSingleton ourInstance = new BackendSingleton();
     private static RequestQueue sRequestQueue;

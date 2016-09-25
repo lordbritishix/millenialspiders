@@ -9,26 +9,21 @@
         android:id="@+id/tutorDescTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#4f00"
-        android:padding="5dp"
-        android:text="Albus D"
-        android:textColor="#fff"
+        android:layout_margin="5dp"
+        android:textColor="@color/primary"
         android:textSize="@dimen/text_size_xlarge" />
 
     <LinearLayout
         android:id="@+id/courseList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#40f0"
-        android:orientation="vertical"
-        android:textColor="#fff" />
+        android:layout_margin="5dp"
+        android:orientation="vertical" />
 
     <LinearLayout
         android:id="@+id/availabilityList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#400f"
-        android:orientation="horizontal"
-
-        android:textColor="#fff" />
+        android:layout_margin="5dp"
+        android:orientation="horizontal" />
 </LinearLayout>

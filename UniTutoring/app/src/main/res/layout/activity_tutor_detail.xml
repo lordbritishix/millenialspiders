@@ -4,6 +4,7 @@
     android:id="@+id/activity_tutor_detail"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -40,8 +41,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textSize="@dimen/text_size_medium"
-                        android:gravity="left" />
+                        android:gravity="left"
+                        android:textColor="@color/primary"
+                        android:textSize="@dimen/text_size_medium" />
 
                     <TextView
                         android:id="@+id/emailTextView"
@@ -49,18 +51,20 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:autoLink="all"
+                        android:gravity="right"
                         android:linksClickable="true"
                         android:text="email@email.com"
-                        android:textSize="@dimen/text_size_medium"
-                        android:gravity="right" />
+                        android:textColor="@color/primary"
+                        android:textSize="@dimen/text_size_medium" />
 
                 </LinearLayout>
             </RelativeLayout>
 
             <TextView
-                android:text="Availability"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="Availability"
+                android:textColor="@color/primary"
                 android:textSize="@dimen/text_size_large" />
 
             <LinearLayout
@@ -70,9 +74,10 @@
                 android:orientation="vertical" />
 
             <TextView
-                android:text="Courses"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="Courses"
+                android:textColor="@color/primary"
                 android:textSize="@dimen/text_size_large" />
 
             <LinearLayout
@@ -83,6 +88,4 @@
 
         </LinearLayout>
     </ScrollView>
-
-
 </RelativeLayout>
