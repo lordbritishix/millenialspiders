@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import com.squareup.otto.Subscribe;
 import com.unitutoring.unitutoring.BackendSingleton;
@@ -23,6 +25,7 @@ public class MainViewActivity extends BaseActivity implements TutorListAdapter.T
     private RecyclerView mRecyclerView;
     private TutorListAdapter mTutorListViewAdapter;
     private StaggeredGridLayoutManager mLayoutManager;
+    private LinearLayout mEmptyLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,13 +38,15 @@ public class MainViewActivity extends BaseActivity implements TutorListAdapter.T
 
         mLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(mLayoutManager);
+
+        mEmptyLayout = (LinearLayout) findViewById(R.id.emptyLayout);
+
+        BackendSingleton.getInstance().getTutorMatches(UserSingleton.getInstance().getUser().email);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d("test", "matches");
-        BackendSingleton.getInstance().getTutorMatches(UserSingleton.getInstance().getUser().email);
     }
 
     @Override
@@ -50,7 +55,8 @@ public class MainViewActivity extends BaseActivity implements TutorListAdapter.T
 
         Tutor tutor = mList.get(position);
         Intent intent = new Intent(this, TutorDetailActivity.class);
-        // TODO: put information of the tutor in the intent
+        String jsonString = tutor.toJSONString();
+        intent.putExtra("tutor", jsonString);
         startActivity(intent);
     }
 
@@ -61,8 +67,15 @@ public class MainViewActivity extends BaseActivity implements TutorListAdapter.T
             mList.clear();
             mList.addAll(event.tutorList);
             mTutorListViewAdapter.notifyDataSetChanged();
+
+            if (mList != null && mList.size() > 0) {
+                mEmptyLayout.setVisibility(View.GONE);
+            } else {
+                mEmptyLayout.setVisibility(View.VISIBLE);
+            }
         } else {
             Log.e(TAG, "onMatch: " + event);
+            mEmptyLayout.setVisibility(View.VISIBLE);
         }
     }
 }

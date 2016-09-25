@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.unitutoring.unitutoring.R;
+import com.unitutoring.unitutoring.Utils;
 import com.unitutoring.unitutoring.models.Availability;
 import com.unitutoring.unitutoring.models.Course;
 import com.unitutoring.unitutoring.models.Tutor;
@@ -82,7 +83,7 @@ public class TutorListAdapter extends RecyclerView.Adapter<TutorListAdapter.Tuto
                 courseTextView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
                 courseTextView.setText(course.courseId);
-                courseTextView.setTextColor(Color.WHITE);
+                courseTextView.setTextColor(Utils.colorForCourse(course.courseId));
                 courseTextView.setTextSize(courseTextView.getContext().getResources().getDimension(R.dimen.text_size_medium));
                 holder.courseList.addView(courseTextView);
             }
@@ -97,7 +98,7 @@ public class TutorListAdapter extends RecyclerView.Adapter<TutorListAdapter.Tuto
                 availabilityTextView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
                 availabilityTextView.setText(availability.dayOfWeek.substring(0, 1));
-                availabilityTextView.setTextColor(Color.WHITE);
+                availabilityTextView.setTextColor(Utils.colorForWeekday(availability.dayOfWeek));
                 availabilityTextView.setTextSize(availabilityTextView.getContext().getResources().getDimension(R.dimen.text_size_large));
                 holder.availabilityList.addView(availabilityTextView);
             }
