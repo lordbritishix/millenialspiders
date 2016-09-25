@@ -103,8 +103,8 @@ public class MatchMakingServlet extends HttpServlet {
             return jsonObject;
         }).collect(Collectors.toSet());
 
-        ret.add("courses", availabilityList);
-        ret.add("availability", coursesList);
+        ret.add("courses", coursesList);
+        ret.add("availability", availabilityList);
 
 
         return ret;
