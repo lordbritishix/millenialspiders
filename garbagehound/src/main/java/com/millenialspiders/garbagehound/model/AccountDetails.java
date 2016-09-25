@@ -5,6 +5,7 @@ public abstract class AccountDetails {
     private String lastName;
     private String emailAddress;
     private String phoneNo;
+    private String username;
 
     public String getFirstName() {
         return firstName;
@@ -36,5 +37,13 @@ public abstract class AccountDetails {
 
     public void setPhoneNo(String phoneNo) {
         this.phoneNo = phoneNo;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

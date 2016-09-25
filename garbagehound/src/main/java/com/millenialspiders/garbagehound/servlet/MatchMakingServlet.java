@@ -2,14 +2,19 @@ package com.millenialspiders.garbagehound.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.DayOfWeek;
+import java.util.Map;
+import java.util.stream.Collectors;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import com.google.appengine.repackaged.com.google.common.collect.ImmutableMap;
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.millenialspiders.garbagehound.model.StudentAccountDetails;
 
 @WebServlet("/match")
 public class MatchMakingServlet extends HttpServlet {
@@ -18,54 +23,90 @@ public class MatchMakingServlet extends HttpServlet {
         String username = req.getParameter("username");
         Preconditions.checkNotNull(username, "username must be set");
 
-        JsonArray matches = new JsonArray();
+        JsonObject match1 =createMatchedAccount(
+                StudentAccountDetails.StudentAccountDetailsBuilder.newInstance()
+                    .withFirstName("Ron")
+                    .withLastName("Weasley")
+                    .withPhoneNo("123-456-789")
+                    .withUsername("rweasley")
+                    .withEmail("ron.weasley@gmail.com")
+                    .build(),
 
-        JsonArray match1Courses = new JsonArray();
-        match1Courses.add("CS101");
-        match1Courses.add("CS500");
-        match1Courses.add("MATLAB1");
+                    ImmutableMap.of(
+                        "COMP501", false,
+                        "COMP100", true,
+                        "COMP210", true
+                    ),
 
-        JsonArray match1Availability = new JsonArray();
-        match1Availability.add("MONDAY");
-        match1Availability.add("WEDNESDAY");
-        match1Availability.add("THURSDAY");
+                    ImmutableMap.of(
+                        DayOfWeek.FRIDAY, false,
+                        DayOfWeek.MONDAY, true,
+                        DayOfWeek.SATURDAY, true
+                    ));
 
-        JsonObject match1 = new JsonObject();
-        match1.addProperty("username", "tutor1");
-        match1.addProperty("firstname", "Harry");
-        match1.addProperty("firstname", "Potter");
-        match1.addProperty("email", "harry.potter@gmail.com");
-        match1.addProperty("phoneNo", "123-456-789");
+        JsonObject match2 = createMatchedAccount(
+                StudentAccountDetails.StudentAccountDetailsBuilder.newInstance()
+                        .withFirstName("Harry")
+                        .withLastName("Potter")
+                        .withPhoneNo("898-123-2492")
+                        .withUsername("hpotter")
+                        .withEmail("harry.potter@gmail.com")
+                        .build(),
 
-        match1.add("courses", match1Courses);
-        match1.add("availability", match1Availability);
+                ImmutableMap.of(
+                        "SCL122", true,
+                        "SCD210", true,
+                        "POA210", true
+                ),
 
+                ImmutableMap.of(
+                        DayOfWeek.TUESDAY, true,
+                        DayOfWeek.MONDAY, true,
+                        DayOfWeek.SATURDAY, false
+                ));
 
-
-        JsonArray match2Courses = new JsonArray();
-        match2Courses.add("WIZ500");
-        match2Courses.add("MAG200");
-        match2Courses.add("WAR2123");
-
-        JsonArray match2Availability = new JsonArray();
-        match2Availability.add("SATURDAY");
-        match2Availability.add("SUNDAY");
-
-        JsonObject match2 = new JsonObject();
-        match2.addProperty("username", "tutor2");
-        match2.addProperty("firstname", "Ron");
-        match2.addProperty("firstname", "Weasley");
-        match2.addProperty("email", "ron.weasley@gmail.com");
-        match2.addProperty("phoneNo", "567-456-789");
-
-        match2.add("courses", match2Courses);
-        match2.add("availability", match2Availability);
-
-        matches.add(match1);
-        matches.add(match2);
+        JsonArray jsonArray = new JsonArray();
+        jsonArray.add(match1);
+        jsonArray.add(match2);
 
         PrintWriter out = resp.getWriter();
         resp.setContentType("application/json");
-        out.print(matches.toString());
+        out.print(jsonArray.toString());
+    }
+
+    private JsonObject createMatchedAccount(
+            StudentAccountDetails studentAccountDetails,
+            Map<String, Boolean> courses,
+            Map<DayOfWeek, Boolean> availability) {
+        JsonObject ret = new JsonObject();
+
+        ret.addProperty("username", studentAccountDetails.getUsername());
+        ret.addProperty("firstname", studentAccountDetails.getFirstName());
+        ret.addProperty("lastname", studentAccountDetails.getLastName());
+        ret.addProperty("email", studentAccountDetails.getEmailAddress());
+
+        JsonArray availabilityList = new JsonArray();
+        availability.entrySet().stream().map(entrySet -> {
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("dayOfWeek", entrySet.getKey().toString());
+            jsonObject.addProperty("isMatched", entrySet.getValue());
+            availabilityList.add(jsonObject);
+            return jsonObject;
+        }).collect(Collectors.toSet());
+
+        JsonArray coursesList = new JsonArray();
+        courses.entrySet().stream().map(entrySet -> {
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("courseId", entrySet.getKey().toString());
+            jsonObject.addProperty("isMatched", entrySet.getValue());
+            coursesList.add(jsonObject);
+            return jsonObject;
+        }).collect(Collectors.toSet());
+
+        ret.add("courses", coursesList);
+        ret.add("availability", availabilityList);
+
+
+        return ret;
     }
 }
