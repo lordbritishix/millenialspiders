@@ -26,10 +26,6 @@
         <insert tableName="account_type">
             <column name="accountType">TEACHER</column>
         </insert>
-
-        <rollback>
-            <dropTable tableName="account_type"/>
-        </rollback>
     </changeSet>
 
     <changeSet id="1" author="lordbritishix">
@@ -52,10 +48,159 @@
                                  constraintName="fk_account_type_id"
                                  referencedTableName="account_type"
                                  referencedColumnNames="id"/>
+    </changeSet>
 
-        <rollback>
-            <dropTable tableName="account"/>
-        </rollback>
+    <changeSet id="2" author="lordbritishix">
+        <comment>Creates the course table</comment>
+        <createTable tableName="course">
+            <column name="course_id" type="varchar(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="course_name" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="3" author="lordbritishix">
+        <comment>Creates the days of the week constants table</comment>
+        <createTable tableName="days_of_the_week">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(50)"/>
+        </createTable>
+        <insert tableName="days_of_the_week">
+            <column name="name">MONDAY</column>
+        </insert>
+        <insert tableName="days_of_the_week">
+            <column name="name">TUESDAY</column>
+        </insert>
+        <insert tableName="days_of_the_week">
+            <column name="name">WEDNESDAY</column>
+        </insert>
+        <insert tableName="days_of_the_week">
+            <column name="name">THURSDAY</column>
+        </insert>
+        <insert tableName="days_of_the_week">
+            <column name="name">FRIDAY</column>
+        </insert>
+        <insert tableName="days_of_the_week">
+            <column name="name">SATURDAY</column>
+        </insert>
+        <insert tableName="days_of_the_week">
+            <column name="name">SUNDAY</column>
+        </insert>
+    </changeSet>
+
+    <changeSet id="4" author="lordbritishix">
+        <comment>Creates the student account detail table that is used to store student details</comment>
+        <createTable tableName="student_account_detail">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="account_id" type="bigint"/>
+            <column name="firstname" type="varchar(50)"/>
+            <column name="lastname" type="varchar(50)"/>
+            <column name="emailaddress" type="varchar(50)"/>
+            <column name="mainphone" type="varchar(50)"/>
+
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="student_account_detail"
+                                 baseColumnNames="id"
+                                 constraintName="fk_student_account_account_id"
+                                 referencedTableName="account"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="5" author="lordbritishix">
+        <comment>Creates the instructor account detail table that is used to store instructor details</comment>
+        <createTable tableName="instructor_account_detail">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="account_id" type="bigint"/>
+            <column name="firstname" type="varchar(50)"/>
+            <column name="lastname" type="varchar(50)"/>
+            <column name="emailaddress" type="varchar(50)"/>
+            <column name="mainphone" type="varchar(50)"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="instructor_account_detail"
+                                 baseColumnNames="id"
+                                 constraintName="fk_instructor_account_account_id"
+                                 referencedTableName="account"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="6" author="lordbritishix">
+        <comment>Creates the table that will store the account's availability in a give day of the week</comment>
+        <createTable tableName="account_day_of_week">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="account_id" type="bigint"/>
+            <column name="day_of_week_id" type="bigint"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="account_day_of_week"
+                                 baseColumnNames="account_id"
+                                 constraintName="fk_account_day_of_week_account"
+                                 referencedTableName="account"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="account_day_of_week"
+                                 baseColumnNames="day_of_week_id"
+                                 constraintName="fk_account_day_of_week_day_of_week"
+                                 referencedTableName="days_of_the_week"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="7" author="lordbritishix">
+        <comment>Creates the table that will store the account's list of courses</comment>
+        <createTable tableName="account_course">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="account_id" type="bigint"/>
+            <column name="course_id" type="varchar(50)"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="account_course"
+                                 baseColumnNames="account_id"
+                                 constraintName="fk_account_course_account"
+                                 referencedTableName="account"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="account_course"
+                                 baseColumnNames="course_id"
+                                 constraintName="fk_account_course_course"
+                                 referencedTableName="course"
+                                 referencedColumnNames="course_id"/>
+    </changeSet>
+
+    <changeSet id="8" author="lordbritishix">
+        <comment>Creates the table that will associate a student with an instructor - and vice versa</comment>
+        <createTable tableName="account_account">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="instructor_account_id" type="bigint"/>
+            <column name="student_account_id" type="bigint"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="account_account"
+                                 baseColumnNames="instructor_account_id"
+                                 constraintName="fk_account_account_instructor"
+                                 referencedTableName="account"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="account_account"
+                                 baseColumnNames="student_account_id"
+                                 constraintName="fk_account_account_student"
+                                 referencedTableName="account"
+                                 referencedColumnNames="id"/>
     </changeSet>
 
 

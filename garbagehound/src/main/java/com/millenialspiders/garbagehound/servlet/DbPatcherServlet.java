@@ -25,7 +25,7 @@ public class DbPatcherServlet extends HttpServlet {
 
         try {
             adminDAO.patchDb();
-            ServletUtils.writeSuccess(resp);
+            ServletUtils.writeSuccess(resp, true);
         } catch (SQLException | LiquibaseException e) {
             throw new ServletException("Unable to patch the db", e);
         }

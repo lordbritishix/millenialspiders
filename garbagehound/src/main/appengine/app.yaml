@@ -5,7 +5,7 @@ threadsafe: true
 handlers:
 - url: /.*
   script: this field is required, but ignored
-  secure: always
+  secure: optional
 
 # [START env_variables]
 env_variables:
