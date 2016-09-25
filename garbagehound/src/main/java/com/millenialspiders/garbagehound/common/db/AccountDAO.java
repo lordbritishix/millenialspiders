@@ -66,6 +66,20 @@ public class AccountDAO extends GarbageHoundDataSource {
         }
     }
 
+    private int findAccountId(String username, Connection connection) throws SQLException {
+        PreparedStatement stmt = null;
+        String query = "SELECT id FROM account WHERE username = ?";
+        stmt = connection.prepareStatement(query);
+        stmt.setString(1, username);
+        ResultSet rs = stmt.executeQuery();
+        if (!rs.isBeforeFirst()) {
+            return 0;
+        }
+        rs.first();
+        return rs.getInt("id");
+    }
+
+
     public int createInstructorAccount(String username, InstructorAccountDetails instructor)
             throws SQLException {
         try (Connection conn = getConnection()) {
@@ -257,8 +271,8 @@ public class AccountDAO extends GarbageHoundDataSource {
         gcsService.createOrReplace(fileName, instance, rawPhoto);
     }
 
-    public InstructorAccountDetails getInstructor(String username) throws SQLException {
-        int accountId = findAccountId(username);
+    private InstructorAccountDetails getInstructor(String username, Connection connection) throws SQLException {
+        int accountId = findAccountId(username, connection);
 
         InstructorAccountDetails.InstructorAccountDetailsBuilder builder =
                 InstructorAccountDetails.InstructorAccountDetailsBuilder.newInstance();
@@ -269,7 +283,7 @@ public class AccountDAO extends GarbageHoundDataSource {
                         .withLastName(rs.getString("lastname"))
                         .withEmail(rs.getString("emailaddress"))
                         .withPhoneNo(rs.getString("mainphone"))
-                        .withPhotoLocation(rs.getString("photoLocation")))) {
+                        .withPhotoLocation(rs.getString("photoLocation")), connection)) {
             return null;
         }
 
@@ -282,7 +296,7 @@ public class AccountDAO extends GarbageHoundDataSource {
             }
 
             builder.withCourses(courses);
-        });
+        }, connection);
 
         populateBuilderWithAvailability(accountId, rs -> {
             Set<DayOfWeek> availability = Sets.newHashSet();
@@ -292,81 +306,81 @@ public class AccountDAO extends GarbageHoundDataSource {
             }
 
             builder.withPreferredDaySlot(availability);
-        });
+        }, connection);
 
         return builder.build();
     }
 
     public StudentAccountDetails getStudent(String username) throws SQLException {
-        int accountId = findAccountId(username);
+        try (Connection connection = getConnection()) {
+            int accountId = findAccountId(username, connection);
 
-        StudentAccountDetails.StudentAccountDetailsBuilder builder =
-                StudentAccountDetails.StudentAccountDetailsBuilder.newInstance();
+            StudentAccountDetails.StudentAccountDetailsBuilder builder =
+                    StudentAccountDetails.StudentAccountDetailsBuilder.newInstance();
 
-        if (!populateBuilderWithStudent(accountId, rs ->
-                builder.withUsername(rs.getString("username"))
-                        .withFirstName(rs.getString("firstname"))
-                        .withLastName(rs.getString("lastname"))
-                        .withEmail(rs.getString("emailaddress"))
-                        .withPhoneNo(rs.getString("mainphone"))
-                        .withPhotoLocation(rs.getString("photoLocation")))) {
-            throw new IllegalArgumentException("Cannot do match making for students whose profiles are not yet filled up");
+            if (!populateBuilderWithStudent(accountId, rs ->
+                    builder.withUsername(rs.getString("username"))
+                            .withFirstName(rs.getString("firstname"))
+                            .withLastName(rs.getString("lastname"))
+                            .withEmail(rs.getString("emailaddress"))
+                            .withPhoneNo(rs.getString("mainphone"))
+                            .withPhotoLocation(rs.getString("photoLocation")), connection)) {
+                throw new IllegalArgumentException("Cannot do match making for students whose profiles are not yet filled up");
+            }
+
+            populateBuilderWithCourses(accountId, rs -> {
+                Set<Course> courses = Sets.newHashSet();
+
+                while (rs.next()) {
+                    Course course = new Course(rs.getString("course_id"), rs.getString("course_name"));
+                    courses.add(course);
+                }
+
+                builder.withCourses(courses);
+            }, connection);
+
+            populateBuilderWithAvailability(accountId, rs -> {
+                Set<DayOfWeek> availability = Sets.newHashSet();
+
+                while (rs.next()) {
+                    availability.add(DayOfWeek.valueOf(rs.getString("name")));
+                }
+
+                builder.withPreferredDaySlot(availability);
+            }, connection);
+
+            return builder.build();
         }
-
-        populateBuilderWithCourses(accountId, rs -> {
-            Set<Course> courses = Sets.newHashSet();
-
-            while (rs.next()) {
-                Course course = new Course(rs.getString("course_id"), rs.getString("course_name"));
-                courses.add(course);
-            }
-
-            builder.withCourses(courses);
-        });
-
-        populateBuilderWithAvailability(accountId, rs -> {
-            Set<DayOfWeek> availability = Sets.newHashSet();
-
-            while (rs.next()) {
-                availability.add(DayOfWeek.valueOf(rs.getString("name")));
-            }
-
-            builder.withPreferredDaySlot(availability);
-        });
-
-        return builder.build();
     }
 
-    private int getAccountTypeId(Account.AccountType accountType) throws SQLException {
+    private int getAccountTypeId(Account.AccountType accountType, Connection connection) throws SQLException {
         Set<String> instructorUserNames = Sets.newHashSet();
 
-        try (Connection connection = getConnection()) {
-            String query =
-                    "SELECT " +
-                            "id " +
-                            "FROM account_type " +
-                            "WHERE accountType=?";
+        String query =
+                "SELECT " +
+                        "id " +
+                        "FROM account_type " +
+                        "WHERE accountType=?";
 
-            PreparedStatement ps = connection.prepareCall(query);
-            ps.setString(1, accountType.toString());
+        PreparedStatement ps = connection.prepareCall(query);
+        ps.setString(1, accountType.toString());
 
-            ResultSet rs = ps.executeQuery();
+        ResultSet rs = ps.executeQuery();
 
-            if (!rs.first()) {
-                return -1;
-            }
-
-            return rs.getInt("id");
+        if (!rs.first()) {
+            return -1;
         }
+
+        return rs.getInt("id");
     }
 
     // Yea, no paging - it sucks
     public Set<InstructorAccountDetails> getAllInstructors() throws SQLException {
         Set<String> instructorUserNames = Sets.newHashSet();
 
-        int accountTypeId = getAccountTypeId(Account.AccountType.TEACHER);
-
         try (Connection connection = getConnection()) {
+            int accountTypeId = getAccountTypeId(Account.AccountType.TEACHER, connection);
+
             String query =
                     "SELECT " +
                             "username " +
@@ -381,117 +395,110 @@ public class AccountDAO extends GarbageHoundDataSource {
             while (rs.next()) {
                 instructorUserNames.add(rs.getString("username"));
             }
+
+            return instructorUserNames.stream()
+                    .map(username -> {
+                        try {
+                            return getInstructor(username, connection);
+                        } catch (SQLException e) {
+                            throw new RuntimeException("Unable to get instructors");
+                        }
+                    })
+                    .filter(instructor -> instructor != null)
+                    .collect(Collectors.toSet());
         }
 
-        return instructorUserNames.stream()
-                .map(username -> {
-                    try {
-                        return getInstructor(username);
-                    } catch (SQLException e) {
-                        throw new RuntimeException("Unable to get instructors");
-                    }
-                })
-                .filter(instructor -> instructor != null)
-                .collect(Collectors.toSet());
     }
 
     private boolean populateBuilderWithInstructor(
-            int accountId, ConsumerThrowingException<ResultSet> consumer) throws SQLException {
-        try (Connection connection = getConnection()) {
-            String query =
-                    "SELECT " +
-                            "account.username, " +
-                            "instructor_account_detail.firstname, " +
-                            "instructor_account_detail.lastname, " +
-                            "instructor_account_detail.emailaddress, " +
-                            "instructor_account_detail.mainphone,  " +
-                            "instructor_account_detail.photoLocation " +
-                            "FROM instructor_account_detail INNER JOIN account ON " +
-                            "instructor_account_detail.account_id = account.id " +
-                            "WHERE account.id=?";
+            int accountId, ConsumerThrowingException<ResultSet> consumer, Connection connection) throws SQLException {
+        String query =
+                "SELECT " +
+                        "account.username, " +
+                        "instructor_account_detail.firstname, " +
+                        "instructor_account_detail.lastname, " +
+                        "instructor_account_detail.emailaddress, " +
+                        "instructor_account_detail.mainphone,  " +
+                        "instructor_account_detail.photoLocation " +
+                        "FROM instructor_account_detail INNER JOIN account ON " +
+                        "instructor_account_detail.account_id = account.id " +
+                        "WHERE account.id=?";
 
-            PreparedStatement ps = connection.prepareCall(query);
-            ps.setInt(1, accountId);
+        PreparedStatement ps = connection.prepareCall(query);
+        ps.setInt(1, accountId);
 
-            ResultSet rs = ps.executeQuery();
+        ResultSet rs = ps.executeQuery();
 
-            if (!rs.first()) {
-                return false;
-            }
-
-            consumer.accept(rs);
-
-            return true;
+        if (!rs.first()) {
+            return false;
         }
+
+        consumer.accept(rs);
+
+        return true;
     }
 
     private boolean populateBuilderWithStudent(
-            int accountId, ConsumerThrowingException<ResultSet> consumer) throws SQLException {
-        try (Connection connection = getConnection()) {
-            String query =
-                    "SELECT " +
-                            "account.username, " +
-                            "student_account_detail.firstname, " +
-                            "student_account_detail.lastname, " +
-                            "student_account_detail.emailaddress, " +
-                            "student_account_detail.mainphone,  " +
-                            "student_account_detail.photoLocation " +
-                            "FROM student_account_detail INNER JOIN account ON " +
-                            "student_account_detail.account_id = account.id " +
-                            "WHERE account.id=?";
+            int accountId, ConsumerThrowingException<ResultSet> consumer, Connection connection) throws SQLException {
+        String query =
+                "SELECT " +
+                        "account.username, " +
+                        "student_account_detail.firstname, " +
+                        "student_account_detail.lastname, " +
+                        "student_account_detail.emailaddress, " +
+                        "student_account_detail.mainphone,  " +
+                        "student_account_detail.photoLocation " +
+                        "FROM student_account_detail INNER JOIN account ON " +
+                        "student_account_detail.account_id = account.id " +
+                        "WHERE account.id=?";
 
-            PreparedStatement ps = connection.prepareCall(query);
-            ps.setInt(1, accountId);
+        PreparedStatement ps = connection.prepareCall(query);
+        ps.setInt(1, accountId);
 
-            ResultSet rs = ps.executeQuery();
+        ResultSet rs = ps.executeQuery();
 
-            if (!rs.first()) {
-                return false;
-            }
-
-            consumer.accept(rs);
-
-            return true;
+        if (!rs.first()) {
+            return false;
         }
+
+        consumer.accept(rs);
+
+        return true;
     }
 
     private void populateBuilderWithCourses(
-            int accountId, ConsumerThrowingException<ResultSet> consumer) throws SQLException {
-        try (Connection connection = getConnection()) {
-            String query =
-                    "SELECT " +
-                            "course.course_id, " +
-                            "course.course_name " +
-                            "FROM course INNER JOIN account_course ON " +
-                            "course.course_id = account_course.course_id " +
-                            "WHERE account_course.account_id=?";
+            int accountId, ConsumerThrowingException<ResultSet> consumer, Connection connection) throws SQLException {
+        String query =
+                "SELECT " +
+                        "course.course_id, " +
+                        "course.course_name " +
+                        "FROM course INNER JOIN account_course ON " +
+                        "course.course_id = account_course.course_id " +
+                        "WHERE account_course.account_id=?";
 
-            PreparedStatement ps = connection.prepareCall(query);
-            ps.setInt(1, accountId);
+        PreparedStatement ps = connection.prepareCall(query);
+        ps.setInt(1, accountId);
 
-            ResultSet rs = ps.executeQuery();
+        ResultSet rs = ps.executeQuery();
 
-            consumer.accept(rs);
-        }
+        consumer.accept(rs);
     }
 
     private void populateBuilderWithAvailability(
-            int accountId, ConsumerThrowingException<ResultSet> consumer) throws SQLException {
-        try (Connection connection = getConnection()) {
-            String query =
-                    "SELECT " +
-                            "days_of_the_week.name " +
-                            "FROM account_day_of_week INNER JOIN days_of_the_week ON " +
-                            "account_day_of_week.day_of_week_id = days_of_the_week.id " +
-                            "WHERE account_day_of_week.account_id=?";
+            int accountId, ConsumerThrowingException<ResultSet> consumer, Connection connection) throws SQLException {
+        String query =
+                "SELECT " +
+                        "days_of_the_week.name " +
+                        "FROM account_day_of_week INNER JOIN days_of_the_week ON " +
+                        "account_day_of_week.day_of_week_id = days_of_the_week.id " +
+                        "WHERE account_day_of_week.account_id=?";
 
-            PreparedStatement ps = connection.prepareCall(query);
-            ps.setInt(1, accountId);
+        PreparedStatement ps = connection.prepareCall(query);
+        ps.setInt(1, accountId);
 
-            ResultSet rs = ps.executeQuery();
+        ResultSet rs = ps.executeQuery();
 
-            consumer.accept(rs);
-        }
+        consumer.accept(rs);
     }
 
     private interface ConsumerThrowingException<T> {
