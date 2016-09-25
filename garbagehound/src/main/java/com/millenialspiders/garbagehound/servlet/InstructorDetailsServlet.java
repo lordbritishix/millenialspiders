@@ -19,6 +19,8 @@ import com.millenialspiders.garbagehound.model.InstructorAccountDetails;
 public class InstructorDetailsServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ServletUtils.writeAccessControl(resp);
+
         String username = req.getParameter("username");
         String firstName = req.getParameter("firstName");
         String lastName = req.getParameter("lastName");

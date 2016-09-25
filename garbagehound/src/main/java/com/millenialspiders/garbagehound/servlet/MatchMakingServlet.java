@@ -20,6 +20,8 @@ import com.millenialspiders.garbagehound.model.StudentAccountDetails;
 public class MatchMakingServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ServletUtils.writeAccessControl(resp);
+
         String username = req.getParameter("username");
         Preconditions.checkNotNull(username, "username must be set");
 

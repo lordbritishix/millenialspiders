@@ -17,6 +17,8 @@ import com.millenialspiders.garbagehound.common.guice.GarbageHoundModule;
 public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ServletUtils.writeAccessControl(resp);
+
         String username = req.getParameter("username");
         String password = req.getParameter("password");
 

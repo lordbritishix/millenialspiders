@@ -20,6 +20,8 @@ import liquibase.exception.LiquibaseException;
 public class DbPatcherServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ServletUtils.writeAccessControl(resp);
+
         Injector injector = Guice.createInjector(new GarbageHoundModule());
         AdminDAO adminDAO = injector.getInstance(AdminDAO.class);
 

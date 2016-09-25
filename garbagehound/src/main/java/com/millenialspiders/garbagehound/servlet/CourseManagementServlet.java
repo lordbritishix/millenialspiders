@@ -18,6 +18,8 @@ import com.millenialspiders.garbagehound.common.guice.GarbageHoundModule;
 public class CourseManagementServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ServletUtils.writeAccessControl(resp);
+
         String courseId = req.getParameter("courseId");
         String courseName = req.getParameter("courseName");
         
@@ -33,6 +35,8 @@ public class CourseManagementServlet extends HttpServlet {
     }
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ServletUtils.writeAccessControl(resp);
+
         String courseId = req.getParameter("courseId");
         
         Injector injector = Guice.createInjector(new GarbageHoundModule());

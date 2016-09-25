@@ -21,6 +21,8 @@ import com.millenialspiders.garbagehound.common.guice.GarbageHoundModule;
 public class HealthServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+        ServletUtils.writeAccessControl(resp);
+
         Injector injector = Guice.createInjector(new GarbageHoundModule());
         AdminDAO adminDAO = injector.getInstance(AdminDAO.class);
 

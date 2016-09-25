@@ -17,6 +17,8 @@ import java.sql.SQLException;
 public class CoursePreferenceServlet  extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ServletUtils.writeAccessControl(resp);
+
         String username = req.getParameter("username");
         String courseId = req.getParameter("courseId");
 
@@ -33,6 +35,8 @@ public class CoursePreferenceServlet  extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ServletUtils.writeAccessControl(resp);
+
         String username = req.getParameter("username");
         String courseId = req.getParameter("courseId");
 

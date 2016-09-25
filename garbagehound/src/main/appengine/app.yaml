@@ -7,14 +7,11 @@ handlers:
   script: this field is required, but ignored
   secure: optional
 
-# [START env_variables]
-env_variables:
-  SQL_URL: jdbc:mysql://google/garbagehound?cloudSqlInstance=garbagehound-142922:us-central1:garbagehound&socketFactory=com.google.cloud.sql.mysql.SocketFactory&user=garbagehound1&password=12345678
-
 resources:
   cpu: 1
   memory_gb: 1
   disk_size_gb: 10
+
 
 automatic_scaling:
   min_num_instances: 1

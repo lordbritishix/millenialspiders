@@ -18,6 +18,8 @@ import com.millenialspiders.garbagehound.common.guice.GarbageHoundModule;
 public class StudentTutorLinkServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ServletUtils.writeAccessControl(resp);
+
         String studentUsername = req.getParameter("studentUsername");
         String tutorUsername = req.getParameter("tutorUsername");
         
@@ -33,6 +35,8 @@ public class StudentTutorLinkServlet extends HttpServlet {
     }
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ServletUtils.writeAccessControl(resp);
+
         String studentUsername = req.getParameter("studentUsername");
         String tutorUsername = req.getParameter("tutorUsername");
         

@@ -15,4 +15,10 @@ class ServletUtils {
 
         out.write(ret.toString());
     }
+
+    static void writeAccessControl(HttpServletResponse resp) {
+        resp.addHeader("Access-Control-Allow-Origin","*");
+        resp.addHeader("Access-Control-Allow-Methods","GET,POST,PUT");
+        resp.addHeader("Access-Control-Allow-Headers","Origin, X-Requested-With, Content-Type, Accept");
+    }
 }

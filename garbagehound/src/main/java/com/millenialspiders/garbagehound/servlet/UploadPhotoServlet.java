@@ -16,6 +16,8 @@ import org.apache.commons.io.IOUtils;
 public class UploadPhotoServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ServletUtils.writeAccessControl(resp);
+
         String username = req.getParameter("username");
         Preconditions.checkNotNull(username, "username must be provided");
 
@@ -27,6 +29,8 @@ public class UploadPhotoServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ServletUtils.writeAccessControl(resp);
+
         String username = req.getParameter("username");
         Preconditions.checkNotNull(username, "username must be provided");
     }

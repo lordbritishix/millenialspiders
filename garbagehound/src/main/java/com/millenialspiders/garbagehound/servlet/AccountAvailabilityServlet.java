@@ -18,6 +18,8 @@ import com.millenialspiders.garbagehound.common.guice.GarbageHoundModule;
 public class AccountAvailabilityServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ServletUtils.writeAccessControl(resp);
+
         String username = req.getParameter("username");
         String day = req.getParameter("day");
         
@@ -33,6 +35,8 @@ public class AccountAvailabilityServlet extends HttpServlet {
     
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ServletUtils.writeAccessControl(resp);
+
         String username = req.getParameter("username");
         String day = req.getParameter("day");
         

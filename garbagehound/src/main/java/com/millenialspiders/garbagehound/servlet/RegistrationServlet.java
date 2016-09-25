@@ -28,6 +28,8 @@ import com.millenialspiders.garbagehound.model.Account;
 public class RegistrationServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ServletUtils.writeAccessControl(resp);
+
         String username = req.getParameter("username");
         String password = req.getParameter("password");
         String accountType = req.getParameter("accountType");
@@ -40,6 +42,7 @@ public class RegistrationServlet extends HttpServlet {
                         || accountType.equals(Account.AccountType.TEACHER.toString()), "Invalid account type provided");
 
         Account account = new Account(username, password, Account.AccountType.valueOf(accountType));
+
         // do something with the account
         Injector injector = Guice.createInjector(new GarbageHoundModule());
         AccountDAO accDAO = injector.getInstance(AccountDAO.class);

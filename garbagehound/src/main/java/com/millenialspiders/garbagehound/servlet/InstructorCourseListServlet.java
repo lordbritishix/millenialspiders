@@ -17,6 +17,8 @@ import java.sql.SQLException;
 public class InstructorCourseListServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+        ServletUtils.writeAccessControl(resp);
+
         Injector injector = Guice.createInjector(new GarbageHoundModule());
         AccountDAO accDAO = injector.getInstance(AccountDAO.class);
 
