@@ -183,6 +183,7 @@ public class AccountDAO extends GarbageHoundDataSource {
             return 1;
         }
     }
+
     public int deleteStudentTutorLink(String studentUsername, 
             String tutorUsername) throws SQLException {
         try (Connection conn = getConnection()) {
@@ -203,9 +204,47 @@ public class AccountDAO extends GarbageHoundDataSource {
         }
     }
 
+    public ResultSet getCourseInstructors() throws SQLException {
+        try (Connection conn = getConnection()) {
+            String query = "SELECT account_course.account_id, account_course.course_id FROM account_course"
+                    + " INNER JOIN instructor_account_detail ON account_course.account_id="
+                    + "instructor_account_detail.account_id";
+            PreparedStatement stmt = null;
+            stmt = conn.prepareStatement(query);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (!rs.isBeforeFirst()) {
+                return null;
+            }
+
+            return rs;
+        }
+    }
+
+    public ResultSet getCourseStudents() throws SQLException {
+        try (Connection conn = getConnection()) {
+            String query = "SELECT account_course.account_id, account_course.course_id FROM account_course"
+                    + " INNER JOIN student_account_detail ON account_course.account_id="
+                    + "student_account_detail.account_id";
+            PreparedStatement stmt = null;
+            stmt = conn.prepareStatement(query);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (!rs.isBeforeFirst()) {
+                return null;
+            }
+
+            return rs;
+        }
+    }
+
+
     public void uploadProfilePhoto(String username, ByteBuffer rawPhoto) throws IOException {
         GcsFileOptions instance = GcsFileOptions.getDefaultInstance();
         GcsFilename fileName = new GcsFilename(BUCKET_NAME, username);
         gcsService.createOrReplace(fileName, instance, rawPhoto);
     }
+
 }
